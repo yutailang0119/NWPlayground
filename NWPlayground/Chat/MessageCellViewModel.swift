@@ -1,14 +1,14 @@
 //
-//  CellViewModel.swift
+//  MessageCellViewModel.swift
 //  NWPlayground
 //
-//  Created by Yutaro Muta on 2019/05/06.
+//  Created by Yutaro Muta on 2019/05/08.
 //  Copyright © 2019 yutailang0119. All rights reserved.
 //
 
 import Foundation
 
-struct CellViewModel {
+struct MessageCellViewModel {
     private let message: String
 
     init(message: String) {

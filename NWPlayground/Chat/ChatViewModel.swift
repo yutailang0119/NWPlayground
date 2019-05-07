@@ -1,26 +1,29 @@
 //
-//  ViewModel.swift
+//  ChatViewModel.swift
 //  NWPlayground
 //
-//  Created by Yutaro Muta on 2019/05/06.
+//  Created by Yutaro Muta on 2019/05/08.
 //  Copyright © 2019 yutailang0119. All rights reserved.
 //
 
 import Foundation
 import Network
 
-protocol Input {
-    func updateUser(name: String)
-    func startSearchForServices()
-    func startListener(name: String)
+protocol ChatViewModelInput {
     func send(message: String?)
+    func stopChat()
 }
 
-protocol Output {
-    var cellViewModels: [CellViewModel] { get set }
+protocol ChatViewModelOutput {
+    var cellViewModels: [MessageCellViewModel] { get }
 }
 
-final class ViewModel: NSObject, Output {
+protocol ChatViewModelType: ChatViewModelInput, ChatViewModelOutput {
+    var input: ChatViewModelInput { get }
+    var output: ChatViewModelOutput { get }
+}
+
+final class ChatViewModel: NSObject, ChatViewModelType {
 
     private let listnerQueueLabel = "io.yutailang0119.NWPlayground.listener"
     private let connectionQueueLabel = "io.yutailang0119.NWPlayground.sender"
@@ -29,43 +32,45 @@ final class ViewModel: NSObject, Output {
     private var connection: NWConnection?
     private let netServiceBrowser = NetServiceBrowser()
 
+    private let userName: String
     private let receivedAction: () -> Void
     private let sentAction: () -> Void
     private let showAlertAction: (_ title: String?, _ message: String?) -> Void
-    private var userName: String?
 
-    var input: Input {
+    static let cellIdentifier: String = "cell"
+
+    var input: ChatViewModelInput {
         return self
     }
 
-    var output: Output {
+    var output: ChatViewModelOutput {
         return self
     }
 
-    var cellViewModels: [CellViewModel] = []
+    private var viewModels: [MessageCellViewModel] = []
 
-    init(receivedAction: @escaping () -> Void,
+    init(userName: String,
+         receivedAction: @escaping () -> Void,
          sentAction: @escaping () -> Void,
          showAlertAction: @escaping (_ title: String?, _ message: String?) -> Void) {
+        self.userName = userName
         self.receivedAction = receivedAction
         self.sentAction = sentAction
         self.showAlertAction = showAlertAction
+
+        super.init()
+
+        netServiceBrowser.delegate = self
+        netServiceBrowser.searchForServices(ofType: networkType, inDomain: networkDomain)
+        startListener(name: userName)
     }
 
 }
 
-extension ViewModel: Input {
+extension ChatViewModel {
 
-    func updateUser(name: String) {
-        self.userName = name
-    }
+    private func startListener(name: String) {
 
-    func startSearchForServices() {
-        netServiceBrowser.delegate = self
-        netServiceBrowser.searchForServices(ofType: networkType, inDomain: networkDomain)
-    }
-
-    func startListener(name: String) {
         let udpParams = NWParameters.udp
         guard let listener = try? NWListener(using: udpParams) else {
             fatalError()
@@ -92,8 +97,8 @@ extension ViewModel: Input {
         connection.receiveMessage { [weak self] (data: Data?, contentContext: NWConnection.ContentContext?, isComplete: Bool, error: NWError?) in
             if let data = data,
                 let message = String(data: data, encoding: .utf8) {
-                let cellViewModel = CellViewModel(message: message)
-                self?.cellViewModels.append(cellViewModel)
+                let cellViewModel = MessageCellViewModel(message: message)
+                self?.viewModels.append(cellViewModel)
                 self?.receivedAction()
             }
 
@@ -125,19 +130,20 @@ extension ViewModel: Input {
         connection?.start(queue: connectionQueue)
     }
 
+}
+
+extension ChatViewModel: ChatViewModelInput {
+
     func send(message: String?) {
-        guard let userName = userName,
-            !userName.isEmpty else {
-                showAlertAction("Invalid name", "Please set valid user name")
-                return
-        }
         guard let message = message,
             !message.isEmpty else {
-                showAlertAction("Invalid message", "Please set message text")
+                showAlertAction("Invalid message",
+                                "Please set message text")
                 return
         }
         guard let connection = connection else {
-            showAlertAction("Connection not found", "Please search near services")
+            showAlertAction("Connection not found",
+                            "Please search near services")
             return
         }
 
@@ -146,8 +152,8 @@ extension ViewModel: Input {
         // Processing when sending is completed
         let completion = NWConnection.SendCompletion.contentProcessed { [weak self] (error: NWError?) in
             print("Send complete")
-            let cellViewModel = CellViewModel(message: "You: \(message)")
-            self?.cellViewModels.append(cellViewModel)
+            let cellViewModel = MessageCellViewModel(message: "You: \(message)")
+            self?.viewModels.append(cellViewModel)
             self?.receivedAction()
             self?.sentAction()
         }
@@ -155,19 +161,32 @@ extension ViewModel: Input {
         // Execution sending
         connection.send(content: data, completion: completion)
     }
+
+    func stopChat() {
+        netServiceBrowser.stop()
+    }
+
 }
 
-extension ViewModel: NetServiceBrowserDelegate {
+extension ChatViewModel: ChatViewModelOutput {
+
+    var cellViewModels: [MessageCellViewModel] {
+        return viewModels
+    }
+}
+
+extension ChatViewModel: NetServiceBrowserDelegate {
     // Called before starting to explore
     func netServiceBrowserWillSearch(_ browser: NetServiceBrowser) {
-        showAlertAction("Start searching services", "")
+        let cellViewModel = MessageCellViewModel(message: "Start searching services")
+        viewModels.append(cellViewModel)
+        receivedAction()
     }
 
     // Called when a service is found
     func netServiceBrowser(_ browser: NetServiceBrowser, didFind service: NetService, moreComing: Bool) {
         // If it is other than myself start sending
-        guard let userName = userName,
-            service.name != userName else {
+        guard service.name != userName else {
                 return
         }
         startConnection(to: service.name)
@@ -188,3 +207,4 @@ extension ViewModel: NetServiceBrowserDelegate {
     func netServiceBrowser(_ browser: NetServiceBrowser, didRemoveDomain domainString: String, moreComing: Bool) {
     }
 }
+
