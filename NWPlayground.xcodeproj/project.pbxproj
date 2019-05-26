@@ -16,6 +16,14 @@
 		6D10BC2E227C3163004F2DF3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6D10BC2D227C3163004F2DF3 /* Assets.xcassets */; };
 		6D10BC31227C3163004F2DF3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6D10BC2F227C3163004F2DF3 /* LaunchScreen.storyboard */; };
 		6D10BC3C227C3163004F2DF3 /* NWPlaygroundTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D10BC3B227C3163004F2DF3 /* NWPlaygroundTests.swift */; };
+		6D5A9697229A7E740082F592 /* MessageCellType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D5A9696229A7E740082F592 /* MessageCellType.swift */; };
+		6DB88DFB229A982C005ABF4F /* MyMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB88DF9229A982C005ABF4F /* MyMessageCell.swift */; };
+		6DB88DFC229A982C005ABF4F /* MyMessageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6DB88DFA229A982C005ABF4F /* MyMessageCell.xib */; };
+		6DB88E00229A985C005ABF4F /* OthersMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB88DFE229A985C005ABF4F /* OthersMessageCell.swift */; };
+		6DB88E01229A985C005ABF4F /* OthersMessageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6DB88DFF229A985C005ABF4F /* OthersMessageCell.xib */; };
+		6DB88E06229AA2A3005ABF4F /* NibInstantitable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB88E05229AA2A3005ABF4F /* NibInstantitable.swift */; };
+		6DB88E09229AA438005ABF4F /* AnnounceMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB88E07229AA438005ABF4F /* AnnounceMessageCell.swift */; };
+		6DB88E0A229AA438005ABF4F /* AnnounceMessageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6DB88E08229AA438005ABF4F /* AnnounceMessageCell.xib */; };
 		6DDE68812281FF2800E4F870 /* UIViewController+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DDE68802281FF2800E4F870 /* UIViewController+Alert.swift */; };
 /* End PBXBuildFile section */
 
@@ -43,6 +51,14 @@
 		6D10BC37227C3163004F2DF3 /* NWPlaygroundTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NWPlaygroundTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D10BC3B227C3163004F2DF3 /* NWPlaygroundTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NWPlaygroundTests.swift; sourceTree = "<group>"; };
 		6D10BC3D227C3163004F2DF3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6D5A9696229A7E740082F592 /* MessageCellType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCellType.swift; sourceTree = "<group>"; };
+		6DB88DF9229A982C005ABF4F /* MyMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyMessageCell.swift; sourceTree = "<group>"; };
+		6DB88DFA229A982C005ABF4F /* MyMessageCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MyMessageCell.xib; sourceTree = "<group>"; };
+		6DB88DFE229A985C005ABF4F /* OthersMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OthersMessageCell.swift; sourceTree = "<group>"; };
+		6DB88DFF229A985C005ABF4F /* OthersMessageCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OthersMessageCell.xib; sourceTree = "<group>"; };
+		6DB88E05229AA2A3005ABF4F /* NibInstantitable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NibInstantitable.swift; sourceTree = "<group>"; };
+		6DB88E07229AA438005ABF4F /* AnnounceMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnounceMessageCell.swift; sourceTree = "<group>"; };
+		6DB88E08229AA438005ABF4F /* AnnounceMessageCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AnnounceMessageCell.xib; sourceTree = "<group>"; };
 		6DDE68802281FF2800E4F870 /* UIViewController+Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alert.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -69,7 +85,7 @@
 			children = (
 				6D0FAC4C2281FB880088897D /* ChatViewController.swift */,
 				6D0FAC4E2281FBE10088897D /* ChatViewModel.swift */,
-				6D0FAC512281FC8D0088897D /* MessageCellViewModel.swift */,
+				6D5A9686229A72550082F592 /* Cells */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -111,6 +127,7 @@
 				6D10BC2D227C3163004F2DF3 /* Assets.xcassets */,
 				6D10BC2F227C3163004F2DF3 /* LaunchScreen.storyboard */,
 				6D10BC32227C3163004F2DF3 /* Info.plist */,
+				6DB88E05229AA2A3005ABF4F /* NibInstantitable.swift */,
 			);
 			path = NWPlayground;
 			sourceTree = "<group>";
@@ -122,6 +139,45 @@
 				6D10BC3D227C3163004F2DF3 /* Info.plist */,
 			);
 			path = NWPlaygroundTests;
+			sourceTree = "<group>";
+		};
+		6D5A9686229A72550082F592 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				6D5A9696229A7E740082F592 /* MessageCellType.swift */,
+				6D0FAC512281FC8D0088897D /* MessageCellViewModel.swift */,
+				6DB88DF8229A9805005ABF4F /* AnnounceMessage */,
+				6DB88DFD229A9833005ABF4F /* MyMessage */,
+				6DB88E02229A9862005ABF4F /* OthersMessage */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		6DB88DF8229A9805005ABF4F /* AnnounceMessage */ = {
+			isa = PBXGroup;
+			children = (
+				6DB88E07229AA438005ABF4F /* AnnounceMessageCell.swift */,
+				6DB88E08229AA438005ABF4F /* AnnounceMessageCell.xib */,
+			);
+			path = AnnounceMessage;
+			sourceTree = "<group>";
+		};
+		6DB88DFD229A9833005ABF4F /* MyMessage */ = {
+			isa = PBXGroup;
+			children = (
+				6DB88DF9229A982C005ABF4F /* MyMessageCell.swift */,
+				6DB88DFA229A982C005ABF4F /* MyMessageCell.xib */,
+			);
+			path = MyMessage;
+			sourceTree = "<group>";
+		};
+		6DB88E02229A9862005ABF4F /* OthersMessage */ = {
+			isa = PBXGroup;
+			children = (
+				6DB88DFE229A985C005ABF4F /* OthersMessageCell.swift */,
+				6DB88DFF229A985C005ABF4F /* OthersMessageCell.xib */,
+			);
+			path = OthersMessage;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -205,8 +261,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6DB88E0A229AA438005ABF4F /* AnnounceMessageCell.xib in Resources */,
 				6D10BC31227C3163004F2DF3 /* LaunchScreen.storyboard in Resources */,
+				6DB88E01229A985C005ABF4F /* OthersMessageCell.xib in Resources */,
 				6D10BC2E227C3163004F2DF3 /* Assets.xcassets in Resources */,
+				6DB88DFC229A982C005ABF4F /* MyMessageCell.xib in Resources */,
 				6D10BC2C227C3161004F2DF3 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -225,11 +284,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6DB88DFB229A982C005ABF4F /* MyMessageCell.swift in Sources */,
 				6DDE68812281FF2800E4F870 /* UIViewController+Alert.swift in Sources */,
+				6D5A9697229A7E740082F592 /* MessageCellType.swift in Sources */,
 				6D0FAC522281FC8D0088897D /* MessageCellViewModel.swift in Sources */,
+				6DB88E09229AA438005ABF4F /* AnnounceMessageCell.swift in Sources */,
 				6D0FAC542281FCC90088897D /* RegisterViewController.swift in Sources */,
 				6D0FAC4D2281FB880088897D /* ChatViewController.swift in Sources */,
+				6DB88E06229AA2A3005ABF4F /* NibInstantitable.swift in Sources */,
 				6D0FAC4F2281FBE10088897D /* ChatViewModel.swift in Sources */,
+				6DB88E00229A985C005ABF4F /* OthersMessageCell.swift in Sources */,
 				6D10BC27227C3161004F2DF3 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

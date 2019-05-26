@@ -37,8 +37,6 @@ final class ChatViewModel: NSObject, ChatViewModelType {
     private let sentAction: () -> Void
     private let showAlertAction: (_ title: String?, _ message: String?) -> Void
 
-    static let cellIdentifier: String = "cell"
-
     var input: ChatViewModelInput {
         return self
     }
@@ -70,7 +68,6 @@ final class ChatViewModel: NSObject, ChatViewModelType {
 extension ChatViewModel {
 
     private func startListener(name: String) {
-
         let udpParams = NWParameters.udp
         guard let listener = try? NWListener(using: udpParams) else {
             fatalError()
@@ -97,7 +94,9 @@ extension ChatViewModel {
         connection.receiveMessage { [weak self] (data: Data?, contentContext: NWConnection.ContentContext?, isComplete: Bool, error: NWError?) in
             if let data = data,
                 let message = String(data: data, encoding: .utf8) {
-                let cellViewModel = MessageCellViewModel(message: message)
+                let cellViewModel = MessageCellViewModel(type: .others(userName: "",
+                                                                       message: message)
+                )
                 self?.viewModels.append(cellViewModel)
                 self?.receivedAction()
             }
@@ -116,11 +115,14 @@ extension ChatViewModel {
         let endpoint = NWEndpoint.service(name: name, type: networkType, domain: networkDomain, interface: nil)
         connection = NWConnection(to: endpoint, using: udpParams)
 
-        connection?.stateUpdateHandler = { (state: NWConnection.State) in
+        connection?.stateUpdateHandler = { [weak self] (state: NWConnection.State) in
             guard state != .ready else {
                 return
             }
-            print("Connection is ready")
+
+            let cellViewModel = MessageCellViewModel(type: .announce(message: "Connected with \(name)"))
+            self?.viewModels.append(cellViewModel)
+            self?.receivedAction()
 
             // do something
         }
@@ -152,7 +154,7 @@ extension ChatViewModel: ChatViewModelInput {
         // Processing when sending is completed
         let completion = NWConnection.SendCompletion.contentProcessed { [weak self] (error: NWError?) in
             print("Send complete")
-            let cellViewModel = MessageCellViewModel(message: "You: \(message)")
+            let cellViewModel = MessageCellViewModel(type: .own(message: message))
             self?.viewModels.append(cellViewModel)
             self?.receivedAction()
             self?.sentAction()
@@ -169,7 +171,6 @@ extension ChatViewModel: ChatViewModelInput {
 }
 
 extension ChatViewModel: ChatViewModelOutput {
-
     var cellViewModels: [MessageCellViewModel] {
         return viewModels
     }
@@ -178,7 +179,7 @@ extension ChatViewModel: ChatViewModelOutput {
 extension ChatViewModel: NetServiceBrowserDelegate {
     // Called before starting to explore
     func netServiceBrowserWillSearch(_ browser: NetServiceBrowser) {
-        let cellViewModel = MessageCellViewModel(message: "Start searching services")
+        let cellViewModel = MessageCellViewModel(type: .announce(message: "Start searching services"))
         viewModels.append(cellViewModel)
         receivedAction()
     }

@@ -14,6 +14,26 @@ final class ChatViewController: UIViewController {
         let userName: String
     }
 
+    @IBOutlet weak var tableView: UITableView! {
+        didSet {
+            tableView.register(MyMessageCell.nib, forCellReuseIdentifier: MyMessageCell.nibName)
+            tableView.register(OthersMessageCell.nib, forCellReuseIdentifier: OthersMessageCell.nibName)
+            tableView.register(AnnounceMessageCell.nib, forCellReuseIdentifier: AnnounceMessageCell.nibName)
+            tableView.dataSource = self
+        }
+    }
+    @IBOutlet weak var messageTextField: UITextField! {
+        didSet {
+            messageTextField.text = nil
+            messageTextField.isEnabled = true
+        }
+    }
+    @IBOutlet weak var sendButton: UIButton! {
+        didSet {
+            sendButton.isEnabled = true
+        }
+    }
+
     static func make(with dependency: Dependency) -> ChatViewController {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let viewController = storyboard.instantiateViewController(withIdentifier: "ChatViewController") as! ChatViewController
@@ -30,24 +50,6 @@ final class ChatViewController: UIViewController {
             }
         )
         return viewController
-    }
-
-    @IBOutlet weak var tableView: UITableView! {
-        didSet {
-            tableView.register(UITableViewCell.self, forCellReuseIdentifier: ChatViewModel.cellIdentifier)
-            tableView.dataSource = self
-        }
-    }
-    @IBOutlet weak var messageTextField: UITextField! {
-        didSet {
-            messageTextField.text = nil
-            messageTextField.isEnabled = true
-        }
-    }
-    @IBOutlet weak var sendButton: UIButton! {
-        didSet {
-            sendButton.isEnabled = true
-        }
     }
 
     private var viewModel: ChatViewModelType!
@@ -81,8 +83,12 @@ extension ChatViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: ChatViewModel.cellIdentifier, for: indexPath)
-        cell.textLabel?.text = viewModel.cellViewModels[indexPath.row].text
+        let cellViewModel = viewModel.cellViewModels[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellViewModel.cellIdentifier, for: indexPath)
+        guard let messageCell = cell as? MessageCellType else {
+            fatalError()
+        }
+        messageCell.configure(with: cellViewModel)
         return cell
     }
 
