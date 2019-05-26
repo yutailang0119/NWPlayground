@@ -11,7 +11,7 @@ import Foundation
 struct MessageCellViewModel {
     enum MessageType {
         case own(message: String)
-        case others(userName: String, message: String)
+        case others(chatData: ChatData)
         case announce(message: String)
 
         var cellIdentifier: String {
@@ -29,8 +29,8 @@ struct MessageCellViewModel {
             switch self {
             case .own(let message):
                 return message
-            case .others(let userName, let message):
-                return "\(userName): \(message)"
+            case .others(let chatData):
+                return "\(chatData.userName): \(chatData.message)"
             case .announce(let message):
                 return message
             }

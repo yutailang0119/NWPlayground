@@ -31,6 +31,8 @@ final class ChatViewModel: NSObject, ChatViewModelType {
     private let networkDomain = "local"
     private var connection: NWConnection?
     private let netServiceBrowser = NetServiceBrowser()
+    private let encoder = JSONEncoder()
+    private let decoder = JSONDecoder()
 
     private let userName: String
     private let receivedAction: () -> Void
@@ -93,10 +95,8 @@ extension ChatViewModel {
         print("Receive on connection: \(connection)")
         connection.receiveMessage { [weak self] (data: Data?, contentContext: NWConnection.ContentContext?, isComplete: Bool, error: NWError?) in
             if let data = data,
-                let message = String(data: data, encoding: .utf8) {
-                let cellViewModel = MessageCellViewModel(type: .others(userName: "",
-                                                                       message: message)
-                )
+                let chatData = try? self?.decoder.decode(ChatData.self, from: data) {
+                let cellViewModel = MessageCellViewModel(type: .others(chatData: chatData))
                 self?.viewModels.append(cellViewModel)
                 self?.receivedAction()
             }
@@ -149,7 +149,14 @@ extension ChatViewModel: ChatViewModelInput {
             return
         }
 
-        let data = "\(userName): \(message)".data(using: .utf8)
+        let chatData = ChatData(userName: userName,
+                                message: message)
+
+        guard let data = try? encoder.encode(chatData) else {
+            showAlertAction("Failed to send",
+                            "Invalid data format")
+            return
+        }
 
         // Processing when sending is completed
         let completion = NWConnection.SendCompletion.contentProcessed { [weak self] (error: NWError?) in
@@ -208,4 +215,3 @@ extension ChatViewModel: NetServiceBrowserDelegate {
     func netServiceBrowser(_ browser: NetServiceBrowser, didRemoveDomain domainString: String, moreComing: Bool) {
     }
 }
-
