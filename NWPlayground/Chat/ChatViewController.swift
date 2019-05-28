@@ -83,7 +83,7 @@ extension ChatViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cellViewModel = viewModel.cellViewModels[indexPath.row]
+        let cellViewModel = viewModel.output.cellViewModels[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: cellViewModel.cellIdentifier, for: indexPath)
         guard let messageCell = cell as? MessageCellType else {
             fatalError()

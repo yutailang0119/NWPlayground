@@ -18,7 +18,7 @@ protocol ChatViewModelOutput {
     var cellViewModels: [MessageCellViewModel] { get }
 }
 
-protocol ChatViewModelType: ChatViewModelInput, ChatViewModelOutput {
+protocol ChatViewModelType {
     var input: ChatViewModelInput { get }
     var output: ChatViewModelOutput { get }
 }
